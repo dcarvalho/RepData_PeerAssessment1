@@ -8,14 +8,32 @@ output:
 
 ## Loading and preprocessing the data
 
+```{r, echo = TRUE}
+data<-read.csv("activity.csv", na.strings="NA")
+
+#Convert the Date and Time variable to Date/Time classes
+data$date=as.Date(data$date, format='%Y-%m-%d')#4. Convert the Date and Time variable to Date/Time 
+```
+
 
 
 ## What is mean total number of steps taken per day?
 
+```{r, echo = TRUE}
+stepsPerDay<-aggregate(steps ~ date, data, FUN = sum)
+hist(stepsPerDay$steps)
+mean(stepsPerDay$steps)
+median(stepsPerDay$steps)
+```
 
 
 ## What is the average daily activity pattern?
 
+```{r, echo = TRUE}
+stepsPer5Min<-setNames(aggregate(steps ~ paste(date,sprintf("%04d", data$interval)), data, FUN = sum), c("interval", "steps"))
+stepsPer5Min$interval<-as.Date(stepsPer5Min$interval, format='%Y-%m-%d %H%M')
+plot(x=stepsPer5Min$interval, y=stepsPer5Min$steps, rm.na=TRUE, type="l")
+```
 
 
 ## Imputing missing values
